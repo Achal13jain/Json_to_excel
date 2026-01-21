@@ -11,7 +11,7 @@ if (API_KEY) {
  * Helper to try multiple model names because availability varies by account/region.
  */
 async function getWorkingModel(genAI) {
-  const modelNames = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro", "gemini-1.0-pro"];
+  const modelNames = ["gemini-2.5-flash"];
   
   for (const name of modelNames) {
     try {
@@ -24,7 +24,7 @@ async function getWorkingModel(genAI) {
       console.warn(`Model ${name} setup failed locally`, e);
     }
   }
-  return "gemini-1.5-flash"; // Default
+  return "gemini-2.5-flash"; // Default
 }
 
 /**
@@ -57,17 +57,13 @@ export const analyzeJsonStructure = async (jsonData) => {
     Data: ${JSON.stringify(sample)}
   `;
 
-  // List of models to try in order of preference
+  // List of models to try in order of preference (Updated for 2026 standards)
   const modelsToTry = [
-    "gemini-1.5-flash",
-    "gemini-1.5-flash-001",
-    "gemini-1.5-flash-002",
-    "gemini-1.5-flash-latest",
-    "gemini-1.5-pro",
-    "gemini-1.5-pro-001",
-    "gemini-1.5-pro-latest",
-    "gemini-1.0-pro", 
-    "gemini-pro"
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash-lite",
+    "gemini-2.0-flash", // Fallback to previous stable
+    "gemini-1.5-flash"  // Last resort legacy
   ];
 
   for (const modelName of modelsToTry) {
