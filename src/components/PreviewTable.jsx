@@ -3,6 +3,7 @@ import { ActionPanel } from './ActionPanel';
 import { generateExcel, downloadExcel, flattenObject } from '../services/excelService';
 import { analyzeJsonStructure } from '../services/aiService';
 import { ArrowLeft, Table as TableIcon } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 export function PreviewTable({ data, filename, onReset }) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -191,3 +192,12 @@ export function PreviewTable({ data, filename, onReset }) {
     </div>
   );
 }
+
+PreviewTable.propTypes = {
+  data: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.object),
+    PropTypes.object
+  ]).isRequired,
+  filename: PropTypes.string,
+  onReset: PropTypes.func.isRequired
+};

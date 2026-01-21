@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Upload, FileJson, AlertCircle } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 export function FileUpload({ onDataLoaded }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -154,3 +155,7 @@ export function FileUpload({ onDataLoaded }) {
     </div>
   );
 }
+
+FileUpload.propTypes = {
+  onDataLoaded: PropTypes.func.isRequired
+};

@@ -1,4 +1,5 @@
 import { Wand2, Download, Table, FileJson } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 export function ActionPanel({ onDownload, onAnalyze, isAnalyzing, aiAnalysis }) {
   return (
@@ -147,3 +148,12 @@ export function ActionPanel({ onDownload, onAnalyze, isAnalyzing, aiAnalysis }) 
     </div>
   );
 }
+
+ActionPanel.propTypes = {
+  onDownload: PropTypes.func.isRequired,
+  onAnalyze: PropTypes.func.isRequired,
+  isAnalyzing: PropTypes.bool.isRequired,
+  aiAnalysis: PropTypes.shape({
+    analysis_summary: PropTypes.string
+  })
+};
