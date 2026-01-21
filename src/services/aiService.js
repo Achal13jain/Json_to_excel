@@ -19,7 +19,7 @@ export const analyzeJsonStructure = async (jsonData) => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     // Sample the data to avoid token limits
     const sample = Array.isArray(jsonData) ? jsonData.slice(0, 3) : jsonData;
