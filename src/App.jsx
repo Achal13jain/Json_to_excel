@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FileUpload } from './components/FileUpload';
 import { PreviewTable } from './components/PreviewTable';
-import { FileSpreadsheet, Wand2 } from 'lucide-react';
+import { FileSpreadsheet, Wand2, Moon, Sun } from 'lucide-react';
 
 function App() {
   const [data, setData] = useState(null);
   const [filename, setFilename] = useState('');
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') || 'dark';
+    }
+    return 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   return (
     <div className="app-container">
@@ -21,9 +36,20 @@ function App() {
             </div>
             <h1>Json<span className="text-gradient">Excel</span></h1>
           </div>
-          <div className="status-badge">
-            <Wand2 size={16} />
-            <span>AI Ready</span>
+          
+          <div className="header-actions">
+            <button 
+              className="theme-toggle" 
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            
+            <div className="status-badge">
+              <Wand2 size={16} />
+              <span>AI Ready</span>
+            </div>
           </div>
         </div>
       </header>
@@ -100,8 +126,14 @@ function App() {
           box-shadow: 0 4px 12px rgba(100, 100, 255, 0.4);
         }
 
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
         .text-gradient {
-          background: linear-gradient(to right, #fff, #a5f3fc);
+          background: linear-gradient(to right, var(--text-main), var(--primary));
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
@@ -110,12 +142,28 @@ function App() {
           display: flex;
           align-items: center;
           gap: 8px;
-          background: rgba(255,255,255,0.1);
+          background: var(--chip-bg);
           padding: 6px 12px;
           border-radius: 20px;
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid var(--glass-border);
           font-size: 0.85rem;
           color: var(--text-muted);
+        }
+        
+        .theme-toggle {
+          padding: 8px;
+          border-radius: 50%;
+          color: var(--text-muted);
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .theme-toggle:hover {
+          color: var(--primary);
+          background: var(--chip-bg);
+          transform: rotate(15deg);
         }
 
         .main-content {
