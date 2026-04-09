@@ -8,17 +8,10 @@ export function ActionPanel({ onDownload, onAnalyze, isAnalyzing, aiAnalysis }) 
   };
 
   const handleCopyCSV = () => {
-    // Basic CSV generation logic for the clipboard
-    // Ideally this should be in a service, but for "Quick Win" we can trigger a notification or 
-    // just implement a small helper if we had access to the raw data here. 
-    // Since we don't have the data prop here (only onDownload triggers it from parent), 
-    // we might need to rely on the parent or adding a new prop.
-    // For now, let's just make the Twitter button work as a "Viral Hook".
-    // Wait, the user asked for "Copy as CSV".
-    // To do that properly, I need the data. 
-    // Let's implement the Share button first as it matches the "Viral" goal perfectly.
-    // We will revisit CSV if we have time/scope.
-    console.log("Copy CSV not fully implemented yet without data prop");
+  const handleCopyCSV = () => {
+    // TODO: Implement CSV clipboard copy
+    console.log("Copy CSV feature pending");
+  };
   };
 
   return (

@@ -8,24 +8,22 @@ if (API_KEY) {
 }
 
 /**
- * Helper to try multiple model names because availability varies by account/region.
+ * Attempts to initialize a working Gemini model from the available list.
  */
 async function getWorkingModel(genAI) {
   const modelNames = ["gemini-2.5-flash"];
   
   for (const name of modelNames) {
     try {
-      const model = genAI.getGenerativeModel({ model: name });
-      // Lightweight check (empty prompt) might error differently, so we just return the model instance
-      // and let the main call fail if it's wrong, but optimally we'd check.
-      // Instead, we will just use the first one and implement fallback in the main loop.
+      genAI.getGenerativeModel({ model: name });
       return name;
     } catch (e) {
-      console.warn(`Model ${name} setup failed locally`, e);
+      // Continue to next model
     }
   }
-  return "gemini-2.5-flash"; // Default
+  return "gemini-2.5-flash";
 }
+
 
 /**
  * Analyzes JSON structure and suggests improvements using Gemini.
@@ -38,8 +36,7 @@ export const analyzeJsonStructure = async (jsonData) => {
     return { suggestions: [], status: 'no_key' };
   }
 
-  // We are analyzing the JSON DATA (Text), NOT an Excel file.
-  // We take a sample to avoid token limits.
+  // Analyze a sample of the JSON data to prevent token limit issues
   const sample = Array.isArray(jsonData) ? jsonData.slice(0, 3) : jsonData;
   const prompt = `
     Analyze this JSON data sample and provide suggestions for converting it to Excel.
@@ -57,7 +54,7 @@ export const analyzeJsonStructure = async (jsonData) => {
     Data: ${JSON.stringify(sample)}
   `;
 
-  // List of models to try in order of preference (Updated for 2026 standards)
+  // Prioritize newer models, falling back to stable versions
   const modelsToTry = [
     "gemini-2.5-flash",
     "gemini-2.5-pro",
@@ -68,7 +65,6 @@ export const analyzeJsonStructure = async (jsonData) => {
 
   for (const modelName of modelsToTry) {
     try {
-      // console.log(`Attempting analysis with model: ${modelName}`); // Remove log to clean console
       const model = genAI.getGenerativeModel({ model: modelName });
       const result = await model.generateContent(prompt);
       const response = await result.response;
@@ -77,7 +73,6 @@ export const analyzeJsonStructure = async (jsonData) => {
       const cleanJson = text.replace(/```json/g, '').replace(/```/g, '');
       return JSON.parse(cleanJson);
     } catch (error) {
-      // Only log if it's NOT a 404 (model not found), or if it's the last one
       const is404 = error.message.includes('404') || error.message.includes('not found');
       if (!is404) {
          console.warn(`Model ${modelName} error:`, error.message);
